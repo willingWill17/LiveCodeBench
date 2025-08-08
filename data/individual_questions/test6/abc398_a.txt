@@ -1,0 +1,64 @@
+question_id: abc398_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Doors in the Center
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+Find a length-N string that satisfies all of the following conditions:
+
+- Each character is - or =.
+- It is a palindrome.
+- It contains exactly one or exactly two =s. If it contains two =s, they are adjacent.
+
+Such a string is unique.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+
+Output
+
+Print the answer.
+
+Constraints
+
+
+- 1 \leq N \leq 100
+- N is an integer.
+
+Sample Input 1
+
+4
+
+Sample Output 1
+
+-==-
+
+Sample Input 2
+
+7
+
+Sample Output 2
+
+---=---
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input: 4
+  Output: -==-
+  Type: stdin
+
+Test Case 2:
+  Input: 7
+  Output: ---=---
+  Type: stdin
+

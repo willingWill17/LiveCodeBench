@@ -1,0 +1,93 @@
+question_id: abc363_c
+==================================================
+
+QUESTION TITLE:
+--------------------
+Avoid K Palindrome 2
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+You are given a string S of length N consisting only of lowercase English letters.
+Find the number of strings obtained by permuting the characters of S (including the string S itself) that do not contain a palindrome of length K as a substring.
+Here, a string T of length N is said to "contain a palindrome of length K as a substring" if and only if there exists a non-negative integer i not greater than (N-K) such that T_{i+j} = T_{i+K+1-j} for every integer j with 1 \leq j \leq K.
+Here, T_k denotes the k-th character of the string T.
+
+Input
+
+The input is given from Standard Input in the following format:
+N K
+S
+
+Output
+
+Print the number of strings obtained by permuting S that do not contain a palindrome of length K as a substring.
+
+Constraints
+
+
+- 2 \leq K \leq N \leq 10
+- N and K are integers.
+- S is a string of length N consisting only of lowercase English letters.
+
+Sample Input 1
+
+3 2
+aab
+
+Sample Output 1
+
+1
+
+The strings obtained by permuting aab are aab, aba, and baa. Among these, aab and baa contain the palindrome aa of length 2 as a substring.
+Thus, the only string that satisfies the condition is aba, so print 1.
+
+Sample Input 2
+
+5 3
+zzyyx
+
+Sample Output 2
+
+16
+
+There are 30 strings obtained by permuting zzyyx, 16 of which do not contain a palindrome of length 3. Thus, print 16.
+
+Sample Input 3
+
+10 5
+abcwxyzyxw
+
+Sample Output 3
+
+440640
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    3 2
+    aab
+  Output:
+    1
+  Type: stdin
+
+Test Case 2:
+  Input:
+    5 3
+    zzyyx
+  Output:
+    16
+  Type: stdin
+
+Test Case 3:
+  Input:
+    10 5
+    abcwxyzyxw
+  Output:
+    440640
+  Type: stdin
+

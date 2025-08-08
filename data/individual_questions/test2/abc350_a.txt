@@ -1,0 +1,86 @@
+question_id: abc350_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Past ABCs
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+You are given a string S of length 6. It is guaranteed that the first three characters of S are ABC and the last three characters are digits.
+Determine if S is the abbreviation of a contest held and concluded on AtCoder before the start of this contest.
+Here, a string T is "the abbreviation of a contest held and concluded on AtCoder before the start of this contest" if and only if it equals one of the following 348 strings:
+ABC001, ABC002, \ldots, ABC314, ABC315, ABC317, ABC318, \ldots, ABC348, ABC349.
+Note that ABC316 is not included.
+
+Input
+
+The input is given from Standard Input in the following format:
+S
+
+Output
+
+If S is the abbreviation of a contest held and concluded on AtCoder before the start of this contest, print Yes; otherwise, print No.
+
+Constraints
+
+
+- S is a string of length 6 where the first three characters are ABC and the last three characters are digits.
+
+Sample Input 1
+
+ABC349
+
+Sample Output 1
+
+Yes
+
+ABC349 is the abbreviation of a contest held and concluded on AtCoder last week.
+
+Sample Input 2
+
+ABC350
+
+Sample Output 2
+
+No
+
+ABC350 is this contest, which has not concluded yet.
+
+Sample Input 3
+
+ABC316
+
+Sample Output 3
+
+No
+
+ABC316 was not held on AtCoder.
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    ABC349
+  Output:
+    Yes
+  Type: stdin
+
+Test Case 2:
+  Input:
+    ABC350
+  Output:
+    No
+  Type: stdin
+
+Test Case 3:
+  Input:
+    ABC316
+  Output:
+    No
+  Type: stdin
+

@@ -1,0 +1,82 @@
+question_id: abc332_b
+==================================================
+
+QUESTION TITLE:
+--------------------
+Glass and Mug
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+AtCoder Inc. sells glasses and mugs.
+Takahashi has a glass with a capacity of G milliliters and a mug with a capacity of M milliliters.
+Here, G<M.
+Initially, both the glass and the mug are empty.
+After performing the following operation K times, determine how many milliliters of water are in the glass and the mug, respectively.
+
+- When the glass is filled with water, that is, the glass contains exactly G milliliters of water, discard all the water from the glass.
+- Otherwise, if the mug is empty, fill the mug with water.
+- Otherwise, transfer water from the mug to the glass until the mug is empty or the glass is filled with water.
+
+Input
+
+The input is given from Standard Input in the following format:
+K G M
+
+Output
+
+Print the amounts, in milliliters, of water in the glass and the mug, in this order, separated by a space, after performing the operation K times.
+
+Constraints
+
+
+- 1\leq K\leq 100
+- 1\leq G<M\leq 1000
+- G, M, and K are integers.
+
+Sample Input 1
+
+5 300 500
+
+Sample Output 1
+
+200 500
+
+The operation will be performed as follows. Initially, both the glass and the mug are empty.
+
+- Fill the mug with water. The glass has 0 milliliters, and the mug has 500 milliliters of water.
+- Transfer water from the mug to the glass until the glass is filled. The glass has 300 milliliters, and the mug has 200 milliliters of water.
+- Discard all the water from the glass. The glass has 0 milliliters, and the mug has 200 milliliters of water.
+- Transfer water from the mug to the glass until the mug is empty. The glass has 200 milliliters, and the mug has 0 milliliters of water.
+- Fill the mug with water. The glass has 200 milliliters, and the mug has 500 milliliters of water.
+
+Thus, after five operations, the glass has 200 milliliters, and the mug has 500 milliliters of water.
+Hence, print 200 and 500 in this order, separated by a space.
+
+Sample Input 2
+
+5 100 200
+
+Sample Output 2
+
+0 0
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    5 300 500
+  Output:
+    200 500
+  Type: stdin
+
+Test Case 2:
+  Input:
+    5 100 200
+  Output:
+    0 0
+  Type: stdin
+

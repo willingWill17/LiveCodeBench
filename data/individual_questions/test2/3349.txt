@@ -1,0 +1,51 @@
+question_id: 3349
+==================================================
+
+QUESTION TITLE:
+--------------------
+maximum-length-substring-with-two-occurrences
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+Given a string s, return the maximum length of a substring such that it contains at most two occurrences of each character.
+ 
+Example 1:
+
+Input: s = "bcbbbcba"
+Output: 4
+Explanation:
+The following substring has a length of 4 and contains at most two occurrences of each character: "bcbbbcba".
+Example 2:
+
+Input: s = "aaaa"
+Output: 2
+Explanation:
+The following substring has a length of 2 and contains at most two occurrences of each character: "aaaa".
+ 
+Constraints:
+
+2 <= s.length <= 100
+s consists only of lowercase English letters.
+
+STARTER CODE:
+--------------------
+class Solution:
+    def maximumLengthSubstring(self, s: str) -> int:
+        
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input: "bcbbbcba"
+  Output: 4
+  Type: functional
+
+Test Case 2:
+  Input: "aaaa"
+  Output: 2
+  Type: functional
+

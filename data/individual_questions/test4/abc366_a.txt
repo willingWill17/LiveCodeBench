@@ -1,0 +1,87 @@
+question_id: abc366_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Election 2
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+A mayoral election is being held in AtCoder City. The candidates are Takahashi and Aoki.
+There are N valid votes cast for either of the two candidates, and the counting is currently underway. Here, N is an odd number.
+The current vote count is T votes for Takahashi and A votes for Aoki.
+Determine if the outcome of the election is already decided at this point.
+
+Input
+
+The input is given from standard input in the following format:
+N T A
+
+Output
+
+Print Yes if the outcome of the election is already decided, and No otherwise.
+
+Constraints
+
+
+- 1 \leq N \leq 99
+- N is an odd number.
+- 0 \leq T, A \leq N
+- T + A \leq N
+- All input values are integers.
+
+Sample Input 1
+
+7 4 2
+
+Sample Output 1
+
+Yes
+
+Even if the remaining one vote goes to Aoki, Takahashi will still win. That is, his victory is decided, so print Yes.
+
+Sample Input 2
+
+99 12 48
+
+Sample Output 2
+
+No
+
+Although Aoki currently has more votes, Takahashi would win if he receives the remaining 39 votes. Therefore, print No.
+
+Sample Input 3
+
+1 0 0
+
+Sample Output 3
+
+No
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    7 4 2
+  Output:
+    Yes
+  Type: stdin
+
+Test Case 2:
+  Input:
+    99 12 48
+  Output:
+    No
+  Type: stdin
+
+Test Case 3:
+  Input:
+    1 0 0
+  Output:
+    No
+  Type: stdin
+

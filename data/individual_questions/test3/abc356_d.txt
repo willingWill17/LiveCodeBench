@@ -1,0 +1,106 @@
+question_id: abc356_d
+==================================================
+
+QUESTION TITLE:
+--------------------
+Masked Popcount
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+Given integers N and M, compute the sum \displaystyle \sum_{k=0}^{N} \rm{popcount}(k \mathbin{\&} M), modulo 998244353.
+Here, \mathbin{\&} represents the bitwise \rm{AND} operation.
+What is the bitwise \rm{AND} operation?
+The result x = a \mathbin{\&} b of the bitwise \rm{AND} operation between non-negative integers a and b is defined as follows:
+
+- x is the unique non-negative integer that satisfies the following conditions for all non-negative integers k:
+
+- If the 2^k place in the binary representation of a and the 2^k place in the binary representation of b are both 1, then the 2^k place in the binary representation of x is 1.
+- Otherwise, the 2^k place in the binary representation of x is 0.
+
+
+
+For example, 3=11_{(2)} and 5=101_{(2)}, so 3 \mathbin{\&} 5 = 1.
+
+What is \rm{popcount}?
+\rm{popcount}(x) represents the number of 1s in the binary representation of x.
+For example, 13=1101_{(2)}, so \rm{popcount}(13) = 3.
+
+Input
+
+The input is given from Standard Input in the following format:
+N M
+
+Output
+
+Print the answer as an integer.
+
+Constraints
+
+
+- N is an integer between 0 and 2^{60} - 1, inclusive.
+- M is an integer between 0 and 2^{60} - 1, inclusive.
+
+Sample Input 1
+
+4 3
+
+Sample Output 1
+
+4
+
+
+- \rm{popcount}(0\mathbin{\&}3) = 0
+- \rm{popcount}(1\mathbin{\&}3) = 1
+- \rm{popcount}(2\mathbin{\&}3) = 1
+- \rm{popcount}(3\mathbin{\&}3) = 2
+- \rm{popcount}(4\mathbin{\&}3) = 0
+
+The sum of these values is 4.
+
+Sample Input 2
+
+0 0
+
+Sample Output 2
+
+0
+
+It is possible that N = 0 or M = 0.
+
+Sample Input 3
+
+1152921504606846975 1152921504606846975
+
+Sample Output 3
+
+499791890
+
+Remember to compute the result modulo 998244353.
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    4 3
+  Output:
+    4
+  Type: stdin
+
+Test Case 2:
+  Input:
+    0 0
+  Output:
+    0
+  Type: stdin
+
+Test Case 3:
+  Input:
+    1152921504606846975 1152921504606846975
+  Output:
+    499791890
+  Type: stdin
+

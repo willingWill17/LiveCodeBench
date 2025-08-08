@@ -1,0 +1,80 @@
+question_id: abc333_c
+==================================================
+
+QUESTION TITLE:
+--------------------
+Repunit Trio
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+A repunit is an integer whose digits are all 1 in decimal representation. The repunits in ascending order are 1, 11, 111, \ldots.
+Find the N-th smallest integer that can be expressed as the sum of exactly three repunits.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+
+Output
+
+Print the answer.
+
+Constraints
+
+
+- N is an integer between 1 and 333, inclusive.
+
+Sample Input 1
+
+5
+
+Sample Output 1
+
+113
+
+The integers that can be expressed as the sum of exactly three repunits are 3, 13, 23, 33, 113, \ldots in ascending order. For example, 113 can be expressed as 113 = 1 + 1 + 111.
+Note that the three repunits do not have to be distinct.
+
+Sample Input 2
+
+19
+
+Sample Output 2
+
+2333
+
+Sample Input 3
+
+333
+
+Sample Output 3
+
+112222222233
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    5
+  Output:
+    113
+  Type: stdin
+
+Test Case 2:
+  Input:
+    19
+  Output:
+    2333
+  Type: stdin
+
+Test Case 3:
+  Input:
+    333
+  Output:
+    112222222233
+  Type: stdin
+

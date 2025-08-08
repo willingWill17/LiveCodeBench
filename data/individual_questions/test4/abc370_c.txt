@@ -1,0 +1,135 @@
+question_id: abc370_c
+==================================================
+
+QUESTION TITLE:
+--------------------
+Word Ladder
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+You are given two strings S and T consisting of lowercase English letters. Here, S and T have equal lengths.
+Let X be an empty array, and repeat the following operation until S equals T:
+
+- Change one character in S, and append S to the end of X.
+
+Find the array of strings X with the minimum number of elements obtained in this way. If there are multiple such arrays with the minimum number of elements, find the lexicographically smallest one among them.
+ What is lexicographical order on arrays of strings?
+A string S = S_1 S_2 \ldots S_N of length N is lexicographically smaller than a string T = T_1 T_2 \ldots T_N of length N if there exists an integer 1 \leq i \leq N such that both of the following are satisfied:
+
+-  S_1 S_2 \ldots S_{i-1} = T_1 T_2 \ldots T_{i-1}
+-  S_i comes earlier than T_i in alphabetical order.
+
+An array of strings X = (X_1,X_2,\ldots,X_M) with M elements is lexicographically smaller than an array of strings Y = (Y_1,Y_2,\ldots,Y_M) with M elements if there exists an integer 1 \leq j \leq M such that both of the following are satisfied:
+
+-  (X_1,X_2,\ldots,X_{j-1}) = (Y_1,Y_2,\ldots,Y_{j-1})
+-  X_j is lexicographically smaller than Y_j.
+
+Input
+
+The input is given from Standard Input in the following format:
+S
+T
+
+Output
+
+Let M be the number of elements in the desired array. Print M + 1 lines.
+The first line should contain the value of M.
+The i + 1-th line (1 \leq i \leq M) should contain the i-th element of the array.
+
+Constraints
+
+
+- S and T are strings consisting of lowercase English letters with length between 1 and 100, inclusive.
+- The lengths of S and T are equal.
+
+Sample Input 1
+
+adbe
+bcbc
+
+Sample Output 1
+
+3
+acbe
+acbc
+bcbc
+
+Initially, S = adbe.
+We can obtain X = ( acbe , acbc , bcbc ) by performing the following operations:
+
+- 
+Change S to acbe and append acbe to the end of X.
+
+- 
+Change S to acbc and append acbc to the end of X.
+
+- 
+Change S to bcbc and append bcbc to the end of X.
+
+Sample Input 2
+
+abcde
+abcde
+
+Sample Output 2
+
+0
+
+Sample Input 3
+
+afwgebrw
+oarbrenq
+
+Sample Output 3
+
+8
+aawgebrw
+aargebrw
+aarbebrw
+aarbebnw
+aarbebnq
+aarbeenq
+aarbrenq
+oarbrenq
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    adbe
+    bcbc
+  Output:
+    3
+    acbe
+    acbc
+    bcbc
+  Type: stdin
+
+Test Case 2:
+  Input:
+    abcde
+    abcde
+  Output:
+    0
+  Type: stdin
+
+Test Case 3:
+  Input:
+    afwgebrw
+    oarbrenq
+  Output:
+    8
+    aawgebrw
+    aargebrw
+    aarbebrw
+    aarbebnw
+    aarbebnq
+    aarbeenq
+    aarbrenq
+    oarbrenq
+  Type: stdin
+

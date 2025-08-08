@@ -1,0 +1,75 @@
+question_id: abc398_c
+==================================================
+
+QUESTION TITLE:
+--------------------
+Uniqueness
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+There are N people, labeled 1 to N. Person i has an integer A_i.
+Among the people who satisfy the condition "None of the other N-1 people has the same integer as themselves," find the one with the greatest integer, and print that person's label.
+If no person satisfies the condition, report that fact instead.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+A_1 A_2 \ldots A_N
+
+Output
+
+If no person satisfies the condition "None of the other N-1 people has the same integer as themselves," print -1.
+Otherwise, among those who satisfy it, print the label of the person whose integer is the largest.
+
+Constraints
+
+
+- 1 \leq N \leq 3\times 10^5
+- 1 \leq A_i \leq 10^9
+- All input values are integers.
+
+Sample Input 1
+
+9
+2 9 9 7 9 2 4 5 8
+
+Sample Output 1
+
+9
+
+Those who satisfy the condition are the persons labeled 4, 7, 8, and 9.
+Their integers are 7, 4, 5, and 8, respectively, and the person with the largest integer is the person labeled 9.
+Thus, the answer is 9.
+
+Sample Input 2
+
+4
+1000000000 1000000000 998244353 998244353
+
+Sample Output 2
+
+-1
+
+If no person satisfies the condition, print -1.
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    9
+    2 9 9 7 9 2 4 5 8
+  Output: 9
+  Type: stdin
+
+Test Case 2:
+  Input:
+    4
+    1000000000 1000000000 998244353 998244353
+  Output: -1
+  Type: stdin
+

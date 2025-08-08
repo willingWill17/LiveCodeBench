@@ -1,0 +1,92 @@
+question_id: abc385_c
+==================================================
+
+QUESTION TITLE:
+--------------------
+Illuminate Buildings
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+There are N buildings arranged in a line at equal intervals. The height of the i-th building from the front is H_i.
+You want to decorate some of these buildings with illuminations so that both of the following conditions are satisfied:
+
+- The chosen buildings all have the same height.
+- The chosen buildings are arranged at equal intervals.
+
+What is the maximum number of buildings you can choose? If you choose exactly one building, it is considered to satisfy the conditions.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+H_1 \ldots H_N
+
+Output
+
+Print the answer.
+
+Constraints
+
+
+- 1 \leq N \leq 3000
+- 1 \leq H_i \leq 3000
+- All input values are integers.
+
+Sample Input 1
+
+8
+5 7 5 7 7 5 7 7
+
+Sample Output 1
+
+3
+
+Choosing the 2nd, 5th, and 8th buildings from the front satisfies the conditions.
+
+Sample Input 2
+
+10
+100 200 300 400 500 600 700 800 900 1000
+
+Sample Output 2
+
+1
+
+Choosing just one building is considered to satisfy the conditions.
+
+Sample Input 3
+
+32
+3 1 4 1 5 9 2 6 5 3 5 8 9 7 9 3 2 3 8 4 6 2 6 4 3 3 8 3 2 7 9 5
+
+Sample Output 3
+
+3
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    8
+    5 7 5 7 7 5 7 7
+  Output: 3
+  Type: stdin
+
+Test Case 2:
+  Input:
+    10
+    100 200 300 400 500 600 700 800 900 1000
+  Output: 1
+  Type: stdin
+
+Test Case 3:
+  Input:
+    32
+    3 1 4 1 5 9 2 6 5 3 5 8 9 7 9 3 2 3 8 4 6 2 6 4 3 3 8 3 2 7 9 5
+  Output: 3
+  Type: stdin
+

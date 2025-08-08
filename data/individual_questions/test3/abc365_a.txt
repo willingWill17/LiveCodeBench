@@ -1,0 +1,113 @@
+question_id: abc365_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Leap Year
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+You are given an integer Y between 1583 and 2023.
+Find the number of days in the year Y of the Gregorian calendar.
+Within the given range, the year Y has the following number of days:
+
+- 
+if Y is not a multiple of 4, then 365 days;
+
+- 
+if Y is a multiple of 4 but not a multiple of 100, then 366 days;
+
+- 
+if Y is a multiple of 100 but not a multiple of 400, then 365 days;
+
+- 
+if Y is a multiple of 400, then 366 days.
+
+Input
+
+The input is given from Standard Input in the following format:
+Y
+
+Output
+
+Print the number of days in the year Y as an integer.
+
+Constraints
+
+
+- Y is an integer between 1583 and 2023, inclusive.
+
+Sample Input 1
+
+2023
+
+Sample Output 1
+
+365
+
+2023 is not a multiple of 4, so it has 365 days.
+
+Sample Input 2
+
+1992
+
+Sample Output 2
+
+366
+
+1992 is a multiple of 4 but not a multiple of 100, so it has 366 days.
+
+Sample Input 3
+
+1800
+
+Sample Output 3
+
+365
+
+1800 is a multiple of 100 but not a multiple of 400, so it has 365 days.
+
+Sample Input 4
+
+1600
+
+Sample Output 4
+
+366
+
+1600 is a multiple of 400, so it has 366 days.
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    2023
+  Output:
+    365
+  Type: stdin
+
+Test Case 2:
+  Input:
+    1992
+  Output:
+    366
+  Type: stdin
+
+Test Case 3:
+  Input:
+    1800
+  Output:
+    365
+  Type: stdin
+
+Test Case 4:
+  Input:
+    1600
+  Output:
+    366
+  Type: stdin
+

@@ -1,0 +1,79 @@
+question_id: abc341_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Print 341
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+Given a positive integer N, print a string of N zeros and N+1 ones where 0 and 1 alternate.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+
+Output
+
+Print the answer.
+
+Constraints
+
+
+- N is an integer.
+- 1 \leq N \leq 100
+
+Sample Input 1
+
+4
+
+Sample Output 1
+
+101010101
+
+A string of four zeros and five ones where 0 and 1 alternate is 101010101.
+
+Sample Input 2
+
+1
+
+Sample Output 2
+
+101
+
+Sample Input 3
+
+10
+
+Sample Output 3
+
+101010101010101010101
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    4
+  Output:
+    101010101
+  Type: stdin
+
+Test Case 2:
+  Input:
+    1
+  Output:
+    101
+  Type: stdin
+
+Test Case 3:
+  Input:
+    10
+  Output:
+    101010101010101010101
+  Type: stdin
+

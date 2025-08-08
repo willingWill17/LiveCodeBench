@@ -1,0 +1,83 @@
+question_id: abc372_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+delete .
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+You are given a string S consisting of lowercase English letters and ..
+Find the string obtained by removing all . from S.
+
+Input
+
+The input is given from Standard Input in the following format:
+S
+
+Output
+
+Print the string obtained by removing all . from S.
+
+Constraints
+
+
+- S is a string of length between 1 and 100, inclusive, consisting of lowercase English letters and ..
+
+Sample Input 1
+
+.v.
+
+Sample Output 1
+
+v
+
+Removing all . from .v. yields v, so print v.
+
+Sample Input 2
+
+chokudai
+
+Sample Output 2
+
+chokudai
+
+There are cases where S does not contain ..
+
+Sample Input 3
+
+...
+
+Sample Output 3
+
+
+
+
+There are also cases where all characters in S are ..
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    .v.
+  Output:
+    v
+  Type: stdin
+
+Test Case 2:
+  Input:
+    chokudai
+  Output:
+    chokudai
+  Type: stdin
+
+Test Case 3:
+  Input:
+    ...
+  Output:
+  Type: stdin
+

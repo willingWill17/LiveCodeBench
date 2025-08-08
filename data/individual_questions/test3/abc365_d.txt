@@ -1,0 +1,98 @@
+question_id: abc365_d
+==================================================
+
+QUESTION TITLE:
+--------------------
+AtCoder Janken 3
+
+DIFFICULTY:
+--------------------
+medium
+
+QUESTION CONTENT:
+--------------------
+Takahashi and Aoki played rock-paper-scissors N times. [Note: In this game, Rock beats Scissors, Scissors beats Paper, and Paper beats Rock.]
+Aoki's moves are represented by a string S of length N consisting of the characters R, P, and S.
+The i-th character of S indicates Aoki's move in the i-th game: R for Rock, P for Paper, and S for Scissors.
+Takahashi's moves satisfy the following conditions:
+
+- Takahashi never lost to Aoki.
+- For i=1,2,\ldots,N-1, Takahashi's move in the i-th game is different from his move in the (i+1)-th game.
+
+Determine the maximum number of games Takahashi could have won.
+It is guaranteed that there exists a sequence of moves for Takahashi that satisfies these conditions.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+S
+
+Output
+
+Print the maximum number of games Takahashi could have won.
+
+Constraints
+
+
+- 1\leq N\leq2\times10 ^ 5
+- S is a string of length N consisting of R, P, and S.
+- N is an integer.
+
+Sample Input 1
+
+6
+PRSSRS
+
+Sample Output 1
+
+5
+
+In the six games of rock-paper-scissors, Aoki played Paper, Rock, Scissors, Scissors, Rock, and Scissors.
+Takahashi can play Scissors, Paper, Rock, Scissors, Paper, and Rock to win the 1st, 2nd, 3rd, 5th, and 6th games.
+There is no sequence of moves for Takahashi that satisfies the conditions and wins all six games, so print 5.
+
+Sample Input 2
+
+10
+SSSSSSSSSS
+
+Sample Output 2
+
+5
+
+Sample Input 3
+
+24
+SPRPSRRRRRPPRPRPSSRSPRSS
+
+Sample Output 3
+
+18
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    6
+    PRSSRS
+  Output:
+    5
+  Type: stdin
+
+Test Case 2:
+  Input:
+    10
+    SSSSSSSSSS
+  Output:
+    5
+  Type: stdin
+
+Test Case 3:
+  Input:
+    24
+    SPRPSRRRRRPPRPRPSSRSPRSS
+  Output:
+    18
+  Type: stdin
+

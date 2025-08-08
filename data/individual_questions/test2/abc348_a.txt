@@ -1,0 +1,66 @@
+question_id: abc348_a
+==================================================
+
+QUESTION TITLE:
+--------------------
+Penalty Kick
+
+DIFFICULTY:
+--------------------
+easy
+
+QUESTION CONTENT:
+--------------------
+Takahashi will have N penalty kicks in a soccer match.
+For the i-th penalty kick, he will fail if i is a multiple of 3, and succeed otherwise.
+Print the results of his penalty kicks.
+
+Input
+
+The input is given from Standard Input in the following format:
+N
+
+Output
+
+Print a string of length N representing the results of Takahashi's penalty kicks. The i-th character (1 \leq i \leq N) should be o if Takahashi succeeds in the i-th penalty kick, and x if he fails.
+
+Constraints
+
+
+- 1 \leq N \leq 100
+- All inputs are integers.
+
+Sample Input 1
+
+7
+
+Sample Output 1
+
+ooxooxo
+
+Takahashi fails the third and sixth penalty kicks, so the third and sixth characters will be x.
+
+Sample Input 2
+
+9
+
+Sample Output 2
+
+ooxooxoox
+
+PUBLIC TEST CASES:
+--------------------
+Test Case 1:
+  Input:
+    7
+  Output:
+    ooxooxo
+  Type: stdin
+
+Test Case 2:
+  Input:
+    9
+  Output:
+    ooxooxoox
+  Type: stdin
+

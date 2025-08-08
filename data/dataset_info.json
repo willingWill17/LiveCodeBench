@@ -1,0 +1,20 @@
+{
+  "dataset_name": "livecodebench/code_generation_lite",
+  "version_tag": "release_v5",
+  "download_method": "git_clone",
+  "status": "downloaded",
+  "description": "LiveCodeBench is a 'live' updating benchmark for holistically evaluating code related capabilities of LLMs. This is the code generation scenario containing over 880 problems from LeetCode, AtCoder, and Codeforces.",
+  "data_files": [
+    "test.jsonl",
+    "test2.jsonl", 
+    "test3.jsonl",
+    "test4.jsonl",
+    "test5.jsonl",
+    "test6.jsonl"
+  ],
+  "total_size_mb": 4300,
+  "download_date": "2024-08-08",
+  "dataset_url": "https://huggingface.co/datasets/livecodebench/code_generation_lite",
+  "paper_url": "https://arxiv.org/abs/2403.07974",
+  "homepage": "https://livecodebench.github.io/"
+}
