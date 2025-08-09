@@ -124,7 +124,8 @@ def evaluate_generations(
     """
 
     # generations are code generations in the same order of the dataset
-
+    # print(f"127 Evaluating {generations_list}...")
+    # print(f"128 Evaluating {samples_list}...")
     inputs = [
         [(generations_list[index], samples_list[index], debug, timeout), index]
         for index in range(len(generations_list))
@@ -178,8 +179,9 @@ def codegen_metrics(
             generations_linear.append([generation])
             remap_index.append(idx)
 
-    print(f"Evaluating {len(samples_linear)}...")
-
+    # print(f"Evaluating {len(samples_linear)}...")
+    # print(f"Evaluating {samples_linear}...")
+    # print(f"Evaluating {generations_linear}...")
     results_linear, metadatas_linear = evaluate_generations(
         samples_linear,
         generations_linear,

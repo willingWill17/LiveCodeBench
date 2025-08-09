@@ -1,0 +1,8 @@
+[
+  {
+    "question_id": "2730",
+    "code_list": [
+      "from typing import List\n\nclass Solution:\n    def maximumOr(self, nums: List[int], k: int) -> int:\n        n = len(nums)\n        \n        # Calculate prefix ORs\n        # pref[i] stores the OR sum of nums[0]...nums[i-1]\n        pref = [0] * (n + 1)\n        for i in range(n):\n            pref[i+1] = pref[i] | nums[i]\n            \n        # Calculate suffix ORs\n        # suff[i] stores the OR sum of nums[i+1]...nums[n-1]\n        suff = [0] * (n + 1)\n        for i in range(n - 1, -1, -1):\n            suff[i] = suff[i+1] | nums[i]\n        \n        max_overall_or = 0\n        \n        # Iterate through each number, applying k multiplications to it\n        for i in range(n):\n            # Calculate the OR of numbers to the left of current (nums[0]...nums[i-1])\n            left_or = pref[i]\n            \n            # Calculate the OR of numbers to the right of current (nums[i+1]...nums[n-1])\n            right_or = suff[i+1]\n            \n            # Current number multiplied by 2^k\n            modified_current_num = nums[i] << k\n            \n            # Total OR for this iteration\n            current_total_or = left_or | modified_current_num | right_or\n            \n            max_overall_or = max(max_overall_or, current_total_or)\n            \n        return max_overall_or\n"
+    ]
+  }
+]

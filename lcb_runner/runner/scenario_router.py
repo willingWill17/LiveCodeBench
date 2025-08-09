@@ -187,7 +187,8 @@ def get_metrics(
 ):
     eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
     generations = [extracted for _, extracted in combined_results]
-
+    # print(f"190 Evaluating {eval_samples}...")
+    # print(f"191 Evaluating {generations}...")
     if scenario == Scenario.codegeneration or scenario == Scenario.selfrepair:
         metrics = codegen_metrics(
             eval_samples,

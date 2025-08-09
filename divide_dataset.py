@@ -169,7 +169,7 @@ def create_individual_questions(input_dir: str, output_dir: str):
 
 def main():
     """Main function to run the dataset division."""
-    input_dir = "data/refined_data"
+    input_dir = "data/divided_data_gpt_5_nano"
     output_dir = "data/individual_questions"
     
     # Check if input directory exists

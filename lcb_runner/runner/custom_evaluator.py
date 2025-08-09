@@ -20,7 +20,7 @@ def main():
     with open(args.custom_output_file, "r") as f:
         custom_outputs = json.load(f)
         assert isinstance(custom_outputs, list)
-        assert len(custom_outputs) == len(benchmark), f"{len(custom_outputs)} != {len(benchmark)}"
+        # assert len(custom_outputs) == len(benchmark), f"{len(custom_outputs)} != {len(benchmark)}"
         if isinstance(custom_outputs[0], list):
             ## custom outputs must list[list[str]]
             ## list of extracted outputs per question
@@ -40,33 +40,50 @@ def main():
             assert all(
                 isinstance(custom_output, dict) for custom_output in custom_outputs
             )
+
+            # Align custom outputs to benchmark by identifier instead of relying on index order
             if args.scenario in [Scenario.codegeneration, Scenario.selfrepair]:
+                # Map by question_id
+                id_to_outputs = {
+                    str(entry["question_id"]): entry["code_list"]
+                    for entry in custom_outputs
+                }
+                benchmark = [
+                    inst for inst in benchmark if str(inst.question_id) in id_to_outputs
+                ]
                 custom_outputs = [
-                    custom_output["code_list"]
-                    for custom_output in sorted(
-                        custom_outputs, key=lambda x: str(x["question_id"])
-                    )
+                    id_to_outputs[str(inst.question_id)] for inst in benchmark
                 ]
             elif args.scenario == Scenario.testoutputprediction:
+                # Map by (question_id, test_id)
+                key_to_outputs = {
+                    (str(entry["question_id"]), str(entry["test_id"])): entry["pred_list"]
+                    for entry in custom_outputs
+                }
+                benchmark = [
+                    inst
+                    for inst in benchmark
+                    if (str(inst.question_id), str(inst.test_id)) in key_to_outputs
+                ]
                 custom_outputs = [
-                    custom_output['pred_list']
-                    for custom_output in sorted(
-                        custom_outputs, key=lambda x: (str(x["question_id"]), str(x['test_id']))
-                    )
+                    key_to_outputs[(str(inst.question_id), str(inst.test_id))]
+                    for inst in benchmark
                 ]
             elif args.scenario == Scenario.codeexecution:
-                custom_outputs = [
-                    custom_output['pred_list']
-                    for custom_output in sorted(
-                        custom_outputs, key=lambda x: int(x.id.split("_")[1])
-                    )
+                # Map by id
+                id_to_outputs = {
+                    str(entry["id"]): entry["pred_list"] for entry in custom_outputs
+                }
+                benchmark = [
+                    inst for inst in benchmark if str(inst.id) in id_to_outputs
                 ]
+                custom_outputs = [id_to_outputs[str(inst.id)] for inst in benchmark]
 
     save_results = [
         instance.insert_output(custom_output, custom_output)
         for instance, custom_output in zip(benchmark, custom_outputs)
     ]
-
+    
     save_results, combined_results = sort_and_extract_save_results(
         args.scenario, save_results
     )
