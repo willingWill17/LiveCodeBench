@@ -68,7 +68,7 @@ add_labels(rects2)
 
 plt.ylim(0, 110)
 plt.tight_layout()
-plt.savefig('visualize_result.png')
+plt.savefig('plots/visualize_result.png')
 
 # Count difficulty distribution (from new model dataset or combined)
 difficulty_counts = df_new['difficulty'].str.lower().value_counts()
@@ -99,4 +99,4 @@ for at in autotexts:
 
 ax.set_title('Question Difficulty Distribution', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('difficulty_distribution_pie.png', dpi=300)
+plt.savefig('plots/difficulty_distribution_pie.png', dpi=300)

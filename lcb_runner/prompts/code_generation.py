@@ -52,7 +52,7 @@ def _format_retrieved_memories(retrieved_memories: Optional[List[Union[str, dict
     memory = retrieved_memories[0]
     if isinstance(memory, dict):
         return (
-            f"### Reflection Memory:\nProblem: {memory.get("problem_understanding", "N/A")}\nReflection: {memory.get("reflection", "N/A")}\nCommon Mistakes: {memory.get("common_mistakes", "N/A")}\n"
+            f"### Reflection Memory:\nProblem: {memory.get('problem_understanding', 'N/A')}\nReflection: {memory.get('reflection', 'N/A')}\nCommon Mistakes: {memory.get('common_mistakes', 'N/A')}\n"
         )
     else:
         return f"### Retrieved Memory:\n{memory}\n"
@@ -61,11 +61,14 @@ def _format_retrieved_memories(retrieved_memories: Optional[List[Union[str, dict
 def get_generic_question_template_answer(
     question: CodeGenerationProblem,
     retrieved_memories: Optional[List[Union[str, dict]]] = None,
+    use_memory: bool = False,
 ):
     prompt = f"### Question:\n{question.question_content}\n\n"
-    rag = _format_retrieved_memories(retrieved_memories)
-    if rag:
-        prompt += rag
+    if use_memory:
+        rag = _format_retrieved_memories(retrieved_memories)
+        if rag:
+            prompt += "You are given reflection memories of near-similar problems. Use the problem statements and reflection memories to guide your solution if it is helpful.\n\n"
+            prompt += rag
     if question.starter_code:
         prompt += (
             f"### Format: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
@@ -81,12 +84,14 @@ def get_generic_question_template_answer(
 def get_oaireason_question_template_answer(
     question: CodeGenerationProblem,
     retrieved_memories: Optional[List[Union[str, dict]]] = None,
+    use_memory: bool = False,
 ):
     prompt = f"### Question:\n{question.question_content}\n\n"
-    rag = _format_retrieved_memories(retrieved_memories)
-    if rag:
-        prompt += "You are given reflection memories of near-similar problems. Use the problem statements and reflection memories to guide your solution if it is helpful.\n\n"
-        prompt += rag
+    if use_memory:
+        rag = _format_retrieved_memories(retrieved_memories)
+        if rag:
+            prompt += "You are given reflection memories of near-similar problems. Use the problem statements and reflection memories to guide your solution if it is helpful.\n\n"
+            prompt += rag
 
     if question.starter_code:
         prompt += (
@@ -100,19 +105,23 @@ def get_oaireason_question_template_answer(
     return prompt
 
 
-def get_geminithinking_question_template_answer(question: CodeGenerationProblem):
+def get_geminithinking_question_template_answer(question: CodeGenerationProblem, retrieved_memories: Optional[List[Union[str, dict]]] = None, use_memory: bool = False):
     prompt = f"### Question:\n{question.question_content}\n\n"
+    if use_memory:
+        rag = _format_retrieved_memories(retrieved_memories)
+        if rag:
+            prompt += "You are given reflection memories of near-similar problems. Use the problem statements and reflection memories to guide your solution if it is helpful.\n\n"
+            prompt += rag
+
     if question.starter_code:
         prompt += (
             f"### Format: {PromptConstants.FORMATTING_MESSAGE_WITH_STARTER_CODE}\n"
         )
         prompt += f"```python\n{question.starter_code}\n```\n\n"
     else:
-        prompt += f"### Format: {PromptConstants.FORMATTING_WITHOUT_STARTER_CODE}\n"
+        prompt += f"### Format: Implement a function called `main()` which orchastrates the solution by reading inputs from stdin and writing the answer to stdout. Feel free to use additional functions as necessary. Next do NOT forget to call `main` function at the end of the program otherwise you will not be awarded any points.\n"
         prompt += "```python\n# YOUR CODE HERE\n```\n\n"
     prompt += f"### Answer: (use the provided format with backticks)\n\n"
-    print("113", prompt)
-    # sys.exit()
     return prompt
 
 
@@ -244,7 +253,7 @@ def get_base_model_question_template_answer(question: CodeGenerationProblem):
 
 
 def format_prompt_generation(
-    question: CodeGenerationProblem, LanguageModelStyle: LMStyle, retrieved_memories: Optional[List[Union[str, dict]]] = None
+    question: CodeGenerationProblem, LanguageModelStyle: LMStyle, retrieved_memories: Optional[List[Union[str, dict]]] = None, use_memory: bool = False
 ) -> str:
     if LanguageModelStyle in [
         LMStyle.OpenAIChat,
@@ -261,7 +270,7 @@ def format_prompt_generation(
         chat_messages += [
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question, retrieved_memories),
+                "content": get_generic_question_template_answer(question, retrieved_memories, use_memory),
             },
         ]
         return chat_messages
@@ -271,7 +280,7 @@ def format_prompt_generation(
                 "role": "user",
                 "content": PromptConstants.SYSTEM_MESSAGE_GENERIC
                 + "\n\n"
-                + get_generic_question_template_answer(question, retrieved_memories),
+                + get_generic_question_template_answer(question, retrieved_memories, use_memory),
             },
         ]
         return chat_messages
@@ -281,7 +290,7 @@ def format_prompt_generation(
                 "role": "user",
                 "content": PromptConstants.SYSTEM_MESSAGE_GENERIC
                 + "\n\n"
-                + get_oaireason_question_template_answer(question, retrieved_memories),
+                + get_oaireason_question_template_answer(question, retrieved_memories, use_memory),
             },
         ]
         return chat_messages
@@ -296,7 +305,7 @@ def format_prompt_generation(
         chat_messages += [
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question),
+                "content": get_generic_question_template_answer(question, use_memory=use_memory),
             },
         ]
         from transformers import AutoTokenizer
@@ -315,7 +324,7 @@ def format_prompt_generation(
     if LanguageModelStyle == LMStyle.Claude:
         prompt = f"{HUMAN_PROMPT}\n"
         prompt += f"{PromptConstants.SYSTEM_MESSAGE_GENERIC}\n\n"
-        prompt += f"{get_generic_question_template_answer(question).rstrip()}\n"
+        prompt += f"{get_generic_question_template_answer(question, use_memory=use_memory).rstrip()}\n"
         prompt += f"{AI_PROMPT}"
         return prompt
 
@@ -324,19 +333,19 @@ def format_prompt_generation(
         prompt = [
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question).rstrip(),
+                "content": get_generic_question_template_answer(question, use_memory=use_memory).rstrip(),
             }
         ]
         return system, prompt
 
     if LanguageModelStyle == LMStyle.Gemini:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GEMINI}\n"
-        prompt += f"{get_generic_question_template_answer(question)}"
+        prompt += f"{get_generic_question_template_answer(question, use_memory=use_memory)}"
         return prompt
 
     if LanguageModelStyle == LMStyle.GeminiThinking:
         prompt = f"{PromptConstants.SYSTEM_MESSAGE_GEMINITHINK}\n"
-        prompt += f"{get_geminithinking_question_template_answer(question)}"
+        prompt += f"{get_geminithinking_question_template_answer(question, retrieved_memories, use_memory)}"
         return prompt
 
     if LanguageModelStyle == LMStyle.MistralWeb:
@@ -347,7 +356,7 @@ def format_prompt_generation(
             },
             {
                 "role": "user",
-                "content": get_generic_question_template_answer(question),
+                "content": get_generic_question_template_answer(question, use_memory=use_memory),
             },
         ]
         return chat_messages

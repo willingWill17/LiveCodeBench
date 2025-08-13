@@ -17,14 +17,15 @@ from lcb_runner.runner.scenario_router import (
     sort_and_extract_save_results,
     get_metrics,
 )
+import time
 
 
 def main():
     args = get_args()
 
     # Initialize OpenAI and MilvusClient
-    llm_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    db_client = MilvusClient(uri=os.getenv("MILVUS_URI"), token=os.getenv("MILVUS_TOKEN"))
+    llm_client = OpenAI(api_key=os.getenv("GEMINI_API_KEY"), base_url="https://generativelanguage.googleapis.com/v1beta/openai/")
+    db_client = MilvusClient(uri=os.getenv("MILVUS_URL"), token=os.getenv("MILVUS_TOKEN"))
     model = LanguageModelStore[args.model]
     benchmark, format_prompt = build_prompt_benchmark(args)
     if args.debug:
@@ -72,7 +73,7 @@ def main():
         runner = build_runner(args, model, llm_client, db_client)
         print(f"Running {model.model_repr} with {len(remaining_benchmark)} instances")
         # print(f"Running {model.model_repr} with {len(format_prompt)} instances")
-        results: list[list[str]] = runner.run_main(remaining_benchmark, format_prompt)
+        results: list[list[str]] = runner.run_main(args.use_memory, remaining_benchmark, format_prompt)
     else:
         results = []
 
@@ -219,4 +220,8 @@ def main():
 
 
 if __name__ == "__main__":
+    start_time = time.time()
     main()
+    end_time = time.time()
+    with open(f"output/{model.model_repr}/{Scenario.codegeneration}_{args.codegen_n}_{args.temperature}_eval_all.json", "a") as f:
+        f.write(f"{end_time - start_time}\n")

@@ -138,9 +138,16 @@ def get_args():
         help="Path to a local directory containing dataset JSONL files (e.g., LiveCodeBench/data/divided_data_gpt_5_nano)",
     )
     parser.add_argument(
-        "--use_mcp_tools",
+        "--use_memory",
+        default=False,
         action="store_true",
-        help="Whether to feed hardcoded MCP tools to the OpenAI model."
+        help="Whether to use memory to the LLM model."
+    )
+    parser.add_argument(
+        "--max_concurrent_threads",
+        type=int,
+        default=20,
+        help="Maximum number of concurrent threads for API requests (when multiprocess <= 1)"
     )
 
     args = parser.parse_args()

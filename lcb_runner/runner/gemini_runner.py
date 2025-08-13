@@ -13,10 +13,10 @@ from lcb_runner.lm_styles import LMStyle
 
 class GeminiRunner(BaseRunner):
     client = genai.Client(
-        # api_key=os.getenv("GOOGLE_API_KEY"), http_options={"api_version": "v1alpha"}
-        vertexai=True,
-        project=os.getenv("VERTEX_GEMINI_PROJECT"),
-        location=os.getenv("VERTEX_GEMINI_LOCATION"),
+        api_key=os.getenv("GOOGLE_API_KEY"), http_options={"api_version": "v1alpha"}
+        # vertexai=True,
+        # project=os.getenv("VERTEX_GEMINI_PROJECT"),
+        # location=os.getenv("VERTEX_GEMINI_LOCATION"),
     )
     safety_settings = [
         {
@@ -37,10 +37,12 @@ class GeminiRunner(BaseRunner):
         },
     ]
 
-    def __init__(self, args, model):
-        super().__init__(args, model)
+    def __init__(self, args, model, llm_client, db_client):
+        super().__init__(args, model, llm_client, db_client)
         self.args = args
         self.model = model
+        self.llm_client = llm_client
+        self.db_client = db_client
         if self.model.model_style == LMStyle.GeminiThinking:
             self.generation_config = GenerateContentConfigDict(
                 # candidate_count=args.n,

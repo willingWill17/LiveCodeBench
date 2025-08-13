@@ -112,6 +112,30 @@ class BaseRunner(ABC):
 
         return outputs
 
+    def _run_batch_threadpool(self, prompts: list[str | list[dict[str, str]]]) -> list[list[str]]:
+        """
+        Run batch processing using ThreadPool for concurrent API requests
+        """
+        max_workers = min(self.args.max_concurrent_threads, len(prompts))  # Limit concurrent threads
+        
+        def process_single_prompt(prompt):
+            try:
+                return self._run_single(prompt)
+            except Exception as e:
+                print(f"Error processing prompt: {e}")
+                # Return empty result on error
+                return [""] * self.args.n
+        
+        # Process prompts concurrently using ThreadPool
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            outputs = list(tqdm(
+                executor.map(process_single_prompt, prompts),
+                total=len(prompts),
+                desc="Processing API requests"
+            ))
+        
+        return outputs
+
     def prompts_to_outputs(
         self, prompts: list[str | list[dict[str, str]]]
     ) -> list[list[str]]:
@@ -124,23 +148,26 @@ class BaseRunner(ABC):
                 outputs.extend(batch_outputs)
                 self.save_cache()
         else:
-    
-            outputs = self.run_batch(prompts)
+            # Use ThreadPool for concurrent API requests when not using multiprocessing
+            if self.args.multiprocess <= 1:
+                outputs = self._run_batch_threadpool(prompts)
+            else:
+                outputs = self.run_batch(prompts)
         return outputs
 
     @staticmethod
     def _retrieve_single_memory(args):
-        question, llm_client, cipher_endpoint = args
+        question, llm_client, db_client = args
         try:
-            query_embedding = llm_client.embeddings.create(input=[question.question_content], model="text-embedding-3-small").data[0].embedding
-            search_hits = cipher_endpoint.search(
-                collection_name="memory",
+            query_embedding = llm_client.embeddings.create(input=[question.question_content], model="gemini-embedding-001").data[0].embedding
+            search_hits = db_client.search(
+                collection_name="gemini_memory",
                 data=[query_embedding],
                 limit=2,
                 output_fields=["payload"],
             )[0]
             #Payload is a list of dicts, each dict is a memory
-
+    
             retrieved_memories = [hit.entity["payload"] for hit in search_hits]
             # Check if any of the retrieved memories contain the question.question_id in their content
             for memory in retrieved_memories:
@@ -158,7 +185,7 @@ class BaseRunner(ABC):
         for question in benchmark:
             tasks.append((question, self.llm_client, self.db_client))
         
-        with ThreadPoolExecutor(max_workers= 10) as executor:
+        with ThreadPoolExecutor(max_workers=min(self.args.max_concurrent_threads, 10)) as executor:
             results = list(tqdm(executor.map(self._retrieve_single_memory, tasks), total=len(tasks), desc="Retrieving memories"))
         
         for q_id, mems in results:
@@ -168,7 +195,7 @@ class BaseRunner(ABC):
     def run_main_repair(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
         assert self.args.n == 1
         # Pre-retrieve all memories
-        all_retrieved_memories = self._retrieve_all_memories(benchmark)
+        # all_retrieved_memories = self._retrieve_all_memories(benchmark)
 
         with open(
             f"output/{self.model.model_repr}/{Scenario.codegeneration}_{self.args.codegen_n}_{self.args.temperature}_eval_all.json"
@@ -220,20 +247,39 @@ class BaseRunner(ABC):
 
         return outputs
 
-    def run_main(self, benchmark: list, format_prompt: callable) -> list[list[str]]:
+    def run_main(self, use_memory: bool, benchmark: list, format_prompt: callable) -> list[list[str]]:
         if self.args.scenario == Scenario.selfrepair:
             return self.run_main_repair(benchmark, format_prompt)
+        
+        all_retrieved_memories = []
+        if use_memory:
+            # Pre-retrieve all memories
+            all_retrieved_memories = self._retrieve_all_memories(benchmark)
 
-        # Pre-retrieve all memories
-        all_retrieved_memories = self._retrieve_all_memories(benchmark)
-
-        prompts = [
-            format_prompt(
-                problem,
-                self.model.model_style,
-                retrieved_memories=all_retrieved_memories.get(problem.question_id, []),
-            )
-            for problem in benchmark
-        ]
+        # Use ThreadPool for concurrent prompt generation and processing
+        max_workers = min(self.args.max_concurrent_threads, len(benchmark))  # Limit concurrent threads
+        
+        def process_single_problem(problem):
+            try:
+                prompt = format_prompt(
+                    problem,
+                    self.model.model_style,
+                    retrieved_memories=all_retrieved_memories.get(problem.question_id, []) if use_memory else [],
+                    use_memory=use_memory
+                )
+                return prompt
+            except Exception as e:
+                print(f"Error generating prompt for problem {problem.question_id}: {e}")
+                return ""
+        
+        # Generate prompts concurrently
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            prompts = list(tqdm(
+                executor.map(process_single_problem, benchmark),
+                total=len(benchmark),
+                desc="Generating prompts"
+            ))
+        
+        # Process prompts to outputs (this already uses multiprocessing if enabled)
         outputs = self.prompts_to_outputs(prompts)
         return outputs

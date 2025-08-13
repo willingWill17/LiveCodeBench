@@ -1,209 +1,222 @@
-# LiveCodeBench
-Official repository for the paper "LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code"
-
-<p align="center">
-    <a href="https://livecodebench.github.io/">🏠 Home Page</a> •
-    <a href="https://huggingface.co/livecodebench/">💻 Data </a> •
-    <a href="https://livecodebench.github.io/leaderboard.html">🏆 Leaderboard</a> •
-    <a href="https://huggingface.co/spaces/livecodebench/code_generation_samples">🔍 Explorer</a> 
-</p>
+# LiveCodeBench with Cipher
+A official benchmark repo of Cipher Agentic Memory Layer with LiveCode Benchmark
 
 ## Introduction
-LiveCodeBench provides holistic and contamination-free evaluation of coding capabilities of LLMs.  Particularly, LiveCodeBench continuously collects new problems over time from contests across three competition platforms -- LeetCode, AtCoder, and CodeForces. Next, LiveCodeBench also focuses on a broader range of code-related capabilities, such as self-repair, code execution, and test output prediction, beyond just code generation. Currently, LiveCodeBench hosts four hundred high-quality coding problems that were published between May 2023 and March 2024.
+LiveCodeBench provides holistic and contamination-free evaluation of coding capabilities of LLMs. This workspace includes LiveCodeBench directly, pre-wired to support Cipher’s memory workflow (Milvus/Zilliz) and popular LLM providers.
+
+
+## Plots
+Visualizations in `plots/`:
+
+![Benchmark](plots/benchmark.png)
+
+![Benchmark Difference](plots/benchmark_difference.png)
+
+![Difficulty Distribution](plots/difficulty_distribution_pie.png)
+
+![Result Visualization](plots/visualize_result.png)
 
 
 ## Installation
 You can clone the repository using the following command:
 
 ```bash
-git clone https://github.com/LiveCodeBench/LiveCodeBench.git
+git clone https://github.com/willingWill17/LiveCodeBench.git
 cd LiveCodeBench
 ```
 
-We recommend using [uv](https://github.com/astral-sh/uv)
-for managing dependencies, which can be installed a [number of ways](https://github.com/astral-sh/uv?tab=readme-ov-file#installation).
-
-Verify that `uv` is installed on your system by running:
-
-```bash
-uv --version
-```
-
-Once `uv` has been installed, use it to create a virtual environment for
-LiveCodeBench and install its dependencies with the following commands:
+We recommend using uv for managing dependencies:
 
 ```bash
 uv venv --python 3.11
 source .venv/bin/activate
-
 uv pip install -e .
 ```
 
+Alternatively with pip:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+## Environment
+This repo’s default runner configuration uses Gemini-compatible OpenAI SDK with a Gemini base URL.
+
+Set your provider API key (for Gemini):
+
+```bash
+export GEMINI_API_KEY="<your_api_key>"
+```
+
+If you switch models/providers, configure credentials accordingly and ensure the model is supported in `lcb_runner/lm_styles.py`.
+
 ## Data
-We provide a benchmark for different code capability scenarios
-- [Code Generation](https://huggingface.co/datasets/livecodebench/code_generation_lite)
-- [Code Execution](https://huggingface.co/datasets/livecodebench/execution)
-- [Test Output Prediction](https://huggingface.co/datasets/livecodebench/test_generation)
+We provide benchmark scenarios:
+- Code Generation: `https://huggingface.co/datasets/livecodebench/code_generation_lite`
+- Code Execution: `https://huggingface.co/datasets/livecodebench/execution`
+- Test Output Prediction: `https://huggingface.co/datasets/livecodebench/test_generation`
 
 ## Inference and Evaluation
+LiveCodeBench supports comprehensive evaluation across multiple scenarios with extensive configuration options.
 
-### Dataset Versions
-Since LiveCodeBench is a continuously updated benchmark, we provide different versions of the dataset. Particularly, we provide the following versions of the dataset:
-- `release_v1`: The initial release of the dataset with problems released between May 2023 and Mar 2024 containing 400 problems.
-- `release_v2`: The updated release of the dataset with problems released between May 2023 and May 2024 containing 511 problems.
-- `release_v3`: The updated release of the dataset with problems released between May 2023 and Jul 2024 containing 612 problems.
-- `release_v4`: The updated release of the dataset with problems released between May 2023 and Sep 2024 containing 713 problems.
-- `release_v5`: The updated release of the dataset with problems released between May 2023 and Jan 2025 containing 880 problems.
-- `release_v6`: The updated release of the dataset with problems released between May 2023 and Apr 2025 containing 1055 problems.
+### Basic Evaluation Commands
 
-You can use the `--release_version` flag to specify the dataset version you wish to use. Particularly, you can use the following command to run the evaluation on the `release_v2` dataset. Release version defaults to `release_latest`. Additionally, we have introduced fine-grained release versions such as `v1`, `v2`, `v1_v3`, `v4_v5` for specific versions of the dataset.
-
+#### Code Generation Evaluation
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate --release_version release_v2
+python -m lcb_runner.runner.main \
+  --model gemini-2.5-pro \
+  --scenario codegeneration \
+  --evaluate \
+  --n 10 \
+  --temperature 0.2
 ```
 
-### Code Generation
+- `--model`: model name defined in `lcb_runner/lm_styles.py` (e.g., `gemini-2.5-pro`, `claude-3-sonnet`, `gpt-4o`, `deepseek-coder`)
+- `--scenario codegeneration`: run code generation evaluation
+- `--evaluate`: compute evaluation metrics
+- `--n`, `--temperature`: sampling controls
 
-We use `vllm` for inference using open models. By default, we use  `tensor_parallel_size=${num_gpus}` to parallelize inference across all available GPUs. It can be configured using the  `--tensor_parallel_size` flag as required. 
-
-For running the inference, please provide the `model_name` based on the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file.
-The scenario (here `codegeneration`) can be used to specify the scenario for the model.
-
+#### Code Execution Evaluation
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration
+python -m lcb_runner.runner.main --model gemini-2.5-pro --scenario codeexecution --evaluate
 ```
 
-Additionally, `--use_cache` flag can be used to cache the generated outputs and `--continue_existing` flag can be used to use the existing dumped results. In case you wish to use model from a local path, you can additionally provide `--local_model_path` flag with the path to the model. We use `n=10` and `temperature=0.2` for generation. Please check the [./lcb_runner/runner/parser.py](./lcb_runner/runner/parser.py) file for more details on the flags.
-
-For closed API models,  `--multiprocess` flag can be used to parallelize queries to API servers (adjustable according to rate limits).
-
-
-#### Evaluation
-We compute `pass@1` and `pass@5` metrics for model evaluations.
-We use a modified version of the checker released with the [`apps` benchmark](https://github.com/hendrycks/apps/blob/main/eval/testing_util.py) to compute the metrics. Particularly, we identified some unhandled edge cases in the original checker and fixed them and additionally simplified the checker based on our collected dataset. To run the evaluation, you can add the `--evaluate` flag:
-
-
+#### Test Output Prediction
 ```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codegeneration --evaluate
+python -m lcb_runner.runner.main --model gemini-2.5-pro --scenario testoutputprediction --evaluate
 ```
 
-Note that time limits can cause slight (`< 0.5`) points of variation in the computation of the `pass@1` and `pass@5` metrics.
-If you observe a significant variation in performance, adjust the `--num_process_evaluate` flag to a lower value or increase the `--timeout` flag. Please report particular issues caused by improper timeouts here. 
+### Memory Implementation
+#### With defined knowledge base
+Populate memory from prior evaluation results and then run with retrieval.
 
-Finally, to get scores over different time windows, you can use [./lcb_runner/evaluation/compute_scores.py](./lcb_runner/evaluation/compute_scores.py) file. 
-Particularly, you can provide `--start_date` and `--end_date` flags (using the `YYYY-MM-DD` format) to get scores over the specified time window. In our paper, to counter contamination in the DeepSeek models, we only report results on problems released after August 2023. You can replicate those evaluations using:
+1) Build reasoning memory entries into Milvus:
 
 ```bash
+python build_reasoning.py \
+  --input_file output/GPT-5-Nano/Scenario.codegeneration_1_0.2_eval_all.json \
+  --model gemini-2.5-pro \
+  --embedding_model gemini-embedding-001 \
+  --collection_name memory
+```
+
+Notes:
+- Defaults in `build_reasoning.py` point to a sample input file and a default collection `memory`.
+- You can control the processing via `--max_threads`, `--debug`, `--dry_run`, index range filters, etc.
+
+2) Evaluate with memory retrieval enabled:
+
+```bash
+python -m lcb_runner.runner.main \
+  --model gemini-2.5-pro \
+  --scenario codegeneration \
+  --evaluate \
+  --use_memory \
+  --local_dataset_path data/divided_data_gpt_5_nano
+```
+
+#### With on-going learning
+Will be implemented soon.
+
+### Plotting 
+### Advanced Evaluation Parameters
+Performance and resource management:
+
+```bash
+# Parallelism and timeouts
+--num_process_evaluate 12          # evaluation processes (default: 12)
+--timeout 6                        # per-eval timeout seconds (default: 6)
+--openai_timeout 90                # provider API timeout (default: 90)
+
+# Memory and caching options
+--use_cache                        # Enable result caching
+--cache_batch_size 100             # Cache batch size (default: 100)
+--multiprocess 0                   # Number of generation processes (default: 0)
+--max_concurrent_threads 20        # Max concurrent API threads (default: 20)
+```
+
+Model-specific configuration:
+
+```bash
+# Local model support
+--local_model_path /path/to/model  # local HF model path
+--trust_remote_code                # trust remote code for HF models
+
+# VLLM options
+--tensor_parallel_size 1           # tensor parallel size
+--enable_prefix_caching            # enable prefix caching
+--dtype bfloat16                   # dtype (default: bfloat16)
+```
+
+Benchmark configuration:
+
+```bash
+# Versioning and filtering
+--release_version release_v2       # use a specific benchmark version
+--not_fast                         # use full test set (slower)
+--start_date 2023-09-01            # filter by start date (YYYY-MM-DD)
+--end_date 2024-03-31              # filter by end date (YYYY-MM-DD)
+--local_dataset_path /path/to/data # local dataset directory
+```
+
+Continuation and recovery:
+
+```bash
+--continue_existing                # continue from existing generations
+--continue_existing_with_eval      # continue and reuse existing evals
+```
+
+### Evaluation Metrics
+- pass@1: correct on first attempt
+- pass@5: correct within 5 attempts
+- pass@10: correct within 10 attempts
+
+Notes:
+- Time limits can cause slight variations (< 0.5 points)
+- Adjust `--num_process_evaluate` and `--timeout` if you see performance variance
+
+### Time-Window Analysis
+
+```bash
+# Compute scores for problems released after a specific date
 python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01
+
+# Compute scores for a specific time window
+python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --start_date 2023-09-01 --end_date 2024-03-31
+
+# Filter by platform (LeetCode, AtCoder, CodeForces)
+python -m lcb_runner.evaluation.compute_scores --eval_all_file {saved_eval_all_file} --platform leetcode
 ```
 
-**NOTE: We have pruned a large number of test cases from the original benchmark and created `code_generation_lite` which is set as the default benchmark offering similar performance estimation much faster. If you wish to use the original benchmark, please use the `--not_fast` flag. We are in the process of updating the leaderboard scores with this updated setting.** 
+### Output Files
+- `{model_name}_{scenario}_{params}.json`: raw model generations
+- `{model_name}_{scenario}_{params}_eval.json`: evaluation summary
+- `{model_name}_{scenario}_{params}_eval_all.json`: per-problem detailed results
 
-**NOTE: V2 Update: to run the update LiveCodeBench please use `--release_version release_v2`. In addition, if you have existing results from `release_v1` you can add `--continue_existing` or better `--continue_existing_with_eval` flags to reuse the old completions or evaluations respectively.**
+### Best Practices
+1. Start with `--debug` to test a small subset (15 problems)
+2. Monitor resources and tune `--num_process_evaluate`
+3. Enable `--use_cache` for repeated runs
+4. Use `--continue_existing` to resume interrupted runs
+5. Inspect the `_eval_all.json` file for per-problem details
 
-
-### Self Repair
-For running self repair, you need to provide an additional `--codegen_n` flag that maps to the number of codes that were generated during code generation. Additionally, the `--temperature` flag is used to resolve the old code generation eval file which must be present in the `output` directory. 
+### Example Evaluation Workflow
 
 ```bash
-python -m lcb_runner.runner.main --model {model_name --scenario selfrepair --codegen_n {num_codes_codegen} --n 1 # only n=1 supported
+# 1) Quick debug run
+python -m lcb_runner.runner.main --model gemini-2.5-pro --scenario codegeneration --evaluate --debug
+
+# 2) Full evaluation with tuned settings
+python -m lcb_runner.runner.main --model gemini-2.5-pro --scenario codegeneration --evaluate \
+  --n 10 --temperature 0.2 --num_process_evaluate 8 --use_cache
+
+# 3) Analyze contamination-free performance for recent problems
+python -m lcb_runner.evaluation.compute_scores \
+  --eval_all_file output/GEMINI_codegeneration_10_0.2_eval_all.json \
+  --start_date 2023-09-01
 ```
-
-In case you have results on a smaller subset or version of the benchmark, you can use `--continue_existing` and `--continue_existing_with_eval` flags to reuse the old computations. Particularly, you can run the following command to continue from existing generated solutions.
-
-```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario selfrepair --evaluate --continue_existing
-```
-
-Note that this will only reuse the generated samples and rerun evaluations. To reuse the old evaluations, you can add the `--continue_existing_with_eval` flag.
-
-### Test Output Prediction
-For running the test output prediction scenario you can simply run
-
-```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario testoutputprediction --evaluate
-```
-
-### Code Execution
-For running the test output prediction scenario you can simply run
-
-```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution --evaluate
-```
-
-Additionally, we support the COT setting with
-
-```bash
-python -m lcb_runner.runner.main --model {model_name} --scenario codeexecution --cot_code_execution --evaluate
-```
-
-## Custom Evaluation
-Alternatively, you can using [`lcb_runner/runner/custom_evaluator.py`](./lcb_runner/runner/custom_evaluator.py) to directly evaluated model generations in a custom file. The file should contain a list of model outputs, appropriately formatted for evaluation in the order of benchmark problems. 
-
-```bash
-python -m lcb_runner.runner.custom_evaluator --custom_output_file {path_to_custom_outputs}
-```
-
-Particularly, arrange the outputs in the following format
-
-```json
-[
-    {"question_id": "id1", "code_list": ["code1", "code2"]},
-    {"question_id": "id2", "code_list": ["code1", "code2"]}
-]
-```
-
-
-## Adding Support for New Models
-
-To add support for new models, we have implemented an extensible framework to add new models and customize prompts appropriately. 
-
-Step 1: Add a new model to the [./lcb_runner/lm_styles.py](./lcb_runner/lm_styles.py) file. Particularly, extend the `LMStyle` class to add a new model family and extend the model to the `LanguageModelList` array.
-
-Step 2: Since we use instruction tuned models, we allow configuring the instruction for each model. Modify the [./lcb_runner/prompts/generation.py](./lcb_runner/prompts/generation.py) file to add a new prompt for the model in the `format_prompt_generation` function. 
-For example, the prompt for `DeepSeekCodeInstruct` family of models looks as follows
-
-```python
-# ./lcb_runner/prompts/generation.py
-if LanguageModelStyle == LMStyle.DeepSeekCodeInstruct:
-    prompt = f"{PromptConstants.SYSTEM_MESSAGE_DEEPSEEK}\n\n"
-    prompt += f"{get_deepseekcode_question_template_answer(question)}"
-    return prompt
-```
-
-## Submit Models to Leaderboard
-We are currently only accepting submissions for only the code generation scenario. To submit models you can create a pull request on our [submissions](https://github.com/LiveCodeBench/submissions). Particularly, you can copy your model generations folder from `output` to the `submissions` folder and create a pull request. We will review the submission and add the model to the leaderboard accordingly. 
-
-## ERRATA
-We maintain a list of known issues and updates in the [ERRATA.md](./ERRATA.md) file. Particularly, we document issues regarding erroneous tests and problems not amenable to autograding. We are constantly using this feedback to improve our problem selection heuristics as we update LiveCodeBench.
-
-## Results
-LiveCodeBench can be used to evaluate performance of LLMs on different time-windows (using problem release date to filter the models). 
-Thus we can detect and prevent potential contamination in the evaluation process and evaluate LLMs on _new_ problems.
-
-<div style="text-align: center;">
-    <img src="./assets/images/contamination1.png" alt="Code Generation Live Evaluation" class="teaser-image"
-    width="40%" />
-    <img src="./assets/images/contamination2.png" alt="Test Output Prediction Live Evaluation" class="teaser-image"
-    width="40%" />
-</div>
-
-Next, we evaluate models on different code capabilities and find that relative performances of models do change over tasks (left). 
-Thus, it highlights the need for holistic evaluation of LLMs for code.
-
-<div style="text-align: center;">
-    <img src="./assets/images/tasks_radar.png" alt="Holistic Tasks Evaluation" class="teaser-image"
-    width="36.1%" />
-    <img src="./assets/images/lcb_vs_he.png" alt="Comparing LCB vs HumanEval" class="teaser-image"
-    width="46%" />
-</div>
-
-We also find evidence of possible overfitting on HumanEval (right). 
-Particularly, models that perform well on HumanEval do not necessarily perform well on LiveCodeBench. 
-In the scatterplot above, we find the models get clustered into two groups, shaded in red and green. 
-The red group contains models that perform well on HumanEval but poorly on LiveCodeBench, while the green group contains models that perform well on both.
-
-For more details, please refer to our website at [livecodebench.github.io](https://livecodebench.github.io).
 
 ## Citation
 
